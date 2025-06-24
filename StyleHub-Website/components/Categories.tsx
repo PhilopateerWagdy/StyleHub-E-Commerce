@@ -3,9 +3,11 @@ import Link from "next/link";
 export default function Categories({
   isActive,
   path,
+  onSelect,
 }: {
   isActive: (href: string) => boolean;
   path: string;
+  onSelect?: () => void;
 }) {
   const links = [
     { href: `${path}/sale`, label: "Sale" },
@@ -14,8 +16,8 @@ export default function Categories({
     { href: `${path}/bottoms`, label: "Bottoms" },
     { href: `${path}/shoes`, label: "Shoes" },
     { href: `${path}/bags`, label: "Bags" },
-    { href: `${path}/accessory`, label: "Accessories" },
-    { href: `${path}/homeware`, label: "Homeware" },
+    { href: `${path}/accessories`, label: "Accessories" },
+    { href: `${path}/homewear`, label: "homewear" },
   ];
 
   return (
@@ -24,10 +26,11 @@ export default function Categories({
         <div key={href} className="w-full py-2 text-center">
           <Link
             href={href}
-            className={`inline-block text-md transition-colors duration-300 hover:underline ${
+            onClick={onSelect}
+            className={`inline-block text-md transition-colors duration-300 ${
               isActive(href)
                 ? "font-semibold text-black border-b-2 border-black"
-                : "text-gray-600"
+                : "text-gray-600 hover:underline"
             }`}
           >
             {label}

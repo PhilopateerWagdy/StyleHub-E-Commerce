@@ -46,12 +46,12 @@ export default async function Footer({ locale }: { locale: "ar" | "en" }) {
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Privacy Policy
+                Orders & Shipping
               </a>
             </li>
             <li>
               <a href="#" className="hover:underline">
-                Terms of Service
+                Returns
               </a>
             </li>
           </ul>

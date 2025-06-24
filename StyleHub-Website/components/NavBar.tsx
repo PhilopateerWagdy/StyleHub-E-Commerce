@@ -1,8 +1,8 @@
 "use client";
 
-// import Link from "next/link";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Header from "./Header";
 import { ShippingInfoProps } from "@/types";
@@ -46,7 +46,7 @@ interface NavbarProps {
 export default function Navbar({ locale, translations }: NavbarProps) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeHref, setActiveHref] = useState<string>(`/${locale}/men`);
+  const [activeHref, setActiveHref] = useState<string | null>(`/${locale}/men`);
 
   const isActive = (href: string) => pathname === href;
 
@@ -55,6 +55,18 @@ export default function Navbar({ locale, translations }: NavbarProps) {
     { href: `/${locale}/women`, label: translations.women },
     { href: `/${locale}/kids`, label: translations.kids },
   ];
+
+  useEffect(() => {
+    const genderPaths = [
+      `/${locale}/men`,
+      `/${locale}/women`,
+      `/${locale}/kids`,
+    ];
+    const matched = genderPaths.find((genderPath) =>
+      pathname.startsWith(genderPath)
+    );
+    setActiveHref(matched || null); // null means no active gender
+  }, [pathname, locale]);
 
   return (
     <>
@@ -65,8 +77,9 @@ export default function Navbar({ locale, translations }: NavbarProps) {
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-4">
           {links.map(({ href, label }) => (
-            <button
+            <Link
               key={href}
+              href={href}
               onClick={() => setActiveHref(href)}
               className={
                 href === activeHref
@@ -75,7 +88,7 @@ export default function Navbar({ locale, translations }: NavbarProps) {
               }
             >
               {label}
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -160,7 +173,11 @@ export default function Navbar({ locale, translations }: NavbarProps) {
 
             <div className="w-full md:hidden px-4">
               <div className="flex flex-col items-center divide-y divide-gray-200 border-b border-gray-200">
-                <Categories isActive={isActive} path={activeHref} />
+                <Categories
+                  isActive={isActive}
+                  path={activeHref ?? ""}
+                  onSelect={() => setMenuOpen(false)}
+                />
               </div>
             </div>
 
@@ -175,7 +192,7 @@ export default function Navbar({ locale, translations }: NavbarProps) {
       </nav>
 
       <div className="hidden md:block fixed top-[0px] left-0 right-0 h-[30px] z-40">
-        <Header locale={locale} isActive={isActive} path={activeHref} />
+        <Header locale={locale} isActive={isActive} path={activeHref ?? ""} />
       </div>
     </>
   );
