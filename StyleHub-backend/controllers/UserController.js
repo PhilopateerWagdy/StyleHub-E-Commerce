@@ -61,6 +61,12 @@ exports.createUser = async (req, res) => {
         name,
         email,
         passwordHash,
+        cart: {
+          create: {}, // Automatically create empty cart linked to this user
+        },
+      },
+      include: {
+        cart: true,
       },
     });
 
@@ -102,17 +108,21 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = parseInt(id);
 
     const existing = await prisma.user.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: userId },
     });
     if (!existing) return res.status(404).json({ error: "User not found" });
 
+    await prisma.cart.deleteMany({
+      where: { userId },
+    });
     await prisma.user.delete({
-      where: { id: parseInt(id) },
+      where: { id: userId },
     });
 
-    res.json({ message: "User deleted successfully" });
+    res.json({ message: "User and their cart deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });
