@@ -93,6 +93,12 @@ exports.updateProduct = async (req, res) => {
     // Ignore any variants input
     delete updateData.variants;
 
+    if (updateData.isOnSale && updateData.discountPercent) {
+      updateData.discountPrice =
+        Number(existing.price) -
+        Number(existing.price) * (updateData.discountPercent / 100);
+    }
+
     const updatedProduct = await prisma.product.update({
       where: { id: parseInt(id) },
       data: updateData,

@@ -7,6 +7,7 @@ const productRoutes = require("./routes/Product");
 const variantRoutes = require("./routes/Variant");
 const userRoutes = require("./routes/User");
 const cartRoutes = require("./routes/Cart");
+const orderRoutes = require("./routes/Order");
 
 // ------------------------------------------------------------
 
@@ -36,6 +37,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/variants", variantRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);
 
 // ------------------------------------------------------------
 
